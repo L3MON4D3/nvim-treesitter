@@ -101,6 +101,7 @@ end)
 
 -- Just avoid some annoying warnings for this directive
 query.add_directive("make-range!", function() end)
+query.add_directive("make-range-row-offset!", function() end)
 
 query.add_directive("downcase!", function(match, _, bufnr, pred, metadata)
   local text, key, value
