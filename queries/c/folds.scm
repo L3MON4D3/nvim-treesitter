@@ -1,10 +1,10 @@
 [
- (for_statement)
+ ; (for_statement)
  (if_statement)
- (while_statement)
+ ; (while_statement)
  (switch_statement)
  (case_statement)
- (function_definition)
+ ; (function_definition)
  (struct_specifier)
  (enum_specifier)
  (comment)
@@ -15,5 +15,5 @@
  (initializer_list)
 ] @fold
 
- (compound_statement
-  (compound_statement) @fold)
+ ; (compound_statement
+ ;  (compound_statement) @fold)

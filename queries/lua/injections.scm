@@ -16,4 +16,8 @@
   arguments: (arguments (string content: _ @query) .))
   (#eq? @_vimcmd_identifier "vim.treesitter.query.set_query"))
 
+((function_call
+  name: (_) @language
+  arguments: (arguments (string content: _ @content)) ))
+
 (comment) @comment
