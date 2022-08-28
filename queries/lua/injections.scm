@@ -20,4 +20,7 @@
   name: (_) @language
   arguments: (arguments (string content: _ @content)) ))
 
+;; highlight string as query if starts with `;; query`
+((string ("string_content") @query) (#lua-match? @query "^%s*;+%s?query"))
+
 (comment) @comment
