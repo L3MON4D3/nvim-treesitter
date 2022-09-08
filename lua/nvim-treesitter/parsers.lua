@@ -471,6 +471,15 @@ list.ocamllex = {
   maintainers = { "@undu" },
 }
 
+list.menhir = {
+  install_info = {
+    url = "https://github.com/Kerl13/tree-sitter-menhir",
+    files = { "src/parser.c", "src/scanner.cc" },
+  },
+  maintainers = { "@Kerl13" },
+  filetype = "menhir",
+}
+
 list.org = {
   install_info = {
     url = "https://github.com/milisims/tree-sitter-org",
@@ -744,8 +753,6 @@ list.verilog = {
     generate_requires_npm = true,
   },
   maintainers = { "@zegervdv" },
-  -- The parser still uses API version 12, because it does not compile with 13
-  experimental = true,
 }
 
 list.pascal = {
@@ -1174,6 +1181,18 @@ list.tiger = {
   },
   filetype = "tiger",
   maintainers = { "@ambroisie" },
+}
+
+list.sxhkdrc = {
+  install_info = {
+    url = "https://github.com/RaafatTurki/tree-sitter-sxhkdrc",
+    files = { "src/parser.c" },
+    branch = "master",
+    generate_requires_npm = false,
+    requires_generate_from_grammar = false,
+    filetype = "sxhkdrc",
+  },
+  maintainers = { "@RaafatTurki" },
 }
 
 list.gitignore = {

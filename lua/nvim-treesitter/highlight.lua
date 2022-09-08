@@ -130,9 +130,13 @@ elseif not vim.g.skip_ts_default_groups then
   end
 end
 
-for capture, hlgroup in pairs(default_map) do
-  link_captures(capture, hlgroup)
+local function link_all_captures()
+  for capture, hlgroup in pairs(default_map) do
+    link_captures(capture, hlgroup)
+  end
 end
+
+link_all_captures()
 
 local function should_enable_vim_regex(config, lang)
   local additional_hl = config.additional_vim_regex_highlighting
@@ -177,6 +181,9 @@ function M.set_custom_captures(captures)
 end
 
 function M.set_default_hlgroups()
+  if not ts.highlighter.hl_map then
+    link_all_captures()
+  end
   local highlights = {
     TSNone = { default = true },
     TSPunctDelimiter = { link = "Delimiter", default = true },
