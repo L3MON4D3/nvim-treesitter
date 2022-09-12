@@ -39,6 +39,7 @@ end
 
 function TSRange.from_nodes_offset(buf, start_node, start_row_offset, end_node, end_row_offset)
   TSRange.__index = TSRange
+
   local start_pos = start_node and { start_node:start() + start_row_offset } or { end_node:start() }
   local end_pos = end_node and { end_node:end_() + end_row_offset} or { start_node:end_() }
   return setmetatable({
@@ -49,6 +50,32 @@ function TSRange.from_nodes_offset(buf, start_node, start_row_offset, end_node, 
     [2] = start_pos[2],
     [3] = end_pos[1],
     [4] = end_pos[2],
+  }, TSRange)
+end
+
+function TSRange.from_nodes_extended(buf,
+	startnode, startnode_where, start_row_offset, start_col_offset,
+	endnode, endnode_where, end_row_offset, end_col_offset)
+
+  TSRange.__index = TSRange
+
+  local startrow, startcol = startnode[startnode_where](startnode)
+  local endrow, endcol = endnode[endnode_where](endnode)
+
+  startrow = startrow + start_row_offset
+  startcol = startcol + start_col_offset
+
+  endrow = endrow + end_row_offset
+  endcol = endcol + end_col_offset
+
+  return setmetatable({
+    start_pos = { startrow, startcol, get_byte_offset(buf, startrow, startcol) },
+    end_pos = { endrow, endcol, get_byte_offset(buf, endrow, endcol) },
+    buf = buf,
+    [1] = startrow,
+    [2] = startcol,
+    [3] = endrow,
+    [4] = endcol,
   }, TSRange)
 end
 
