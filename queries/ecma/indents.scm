@@ -12,6 +12,7 @@
   (return_statement)
   (statement_block)
   (switch_case)
+  (switch_default)
   (switch_statement)
   (template_substitution)
   (ternary_expression)
@@ -45,7 +46,8 @@
 ] @branch
 (statement_block "{" @branch)
 
-"}" @indent_end
+(parenthesized_expression ("(" (_) ")" @indent_end))
+["}" "]"] @indent_end
 
 [
   (comment)

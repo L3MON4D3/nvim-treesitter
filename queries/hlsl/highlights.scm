@@ -9,10 +9,22 @@
   "groupshared"
   "discard"
   "cbuffer"
-  "nointerpolation"
   "row_major"
   "column_major"
-] @keyword
+  "globallycoherent"
+  "centroid"
+  "noperspective"
+  "nointerpolation"
+  "sample"
+  "linear"
+  "snorm"
+  "unorm"
+  "point"
+  "line"
+  "triangleadj"
+  "lineadj"
+  "triangle"
+] @type.qualifier
 
 (
   (identifier) @variable.builtin

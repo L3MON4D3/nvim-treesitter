@@ -47,6 +47,12 @@
 
 (type_identifier) @type
 
+; '?' operator, replacement for Java @Nullable
+(nullable_type) @punctuation.special
+
+(type_alias
+	(type_identifier) @type.definition)
+
 ((type_identifier) @type.builtin
 	(#any-of? @type.builtin
 		"Byte"
@@ -86,8 +92,8 @@
 		"MutableList"
 ))
 
-(package_header
-	. (identifier)) @namespace
+(package_header "package" @keyword
+	. (identifier (simple_identifier) @namespace))
 
 (import_header
 	"import" @include)
@@ -98,7 +104,7 @@
 	(identifier
 		(simple_identifier) @type @_import)
 	(import_alias
-		(type_identifier) @type)?
+		(type_identifier) @type.definition)?
 		(#lua-match? @_import "^[A-Z]"))
 
 (import_header
@@ -108,14 +114,14 @@
 		(type_identifier) @function)?
 		(#lua-match? @_import "^[a-z]"))
 
-; TODO: Seperate labeled returns/breaks/continue/super/this
+; TODO: Separate labeled returns/breaks/continue/super/this
 ;       Must be implemented in the parser first
 (label) @label
 
 ;;; Function definitions
 
 (function_declaration
-	. (simple_identifier) @function)
+	(simple_identifier) @function)
 
 (getter
 	("get") @function.builtin)
@@ -149,6 +155,10 @@
 
 ; function()
 (call_expression
+	. (simple_identifier) @function.call)
+
+; ::function
+(callable_reference
 	. (simple_identifier) @function.call)
 
 ; object.function() or object.property.function()
@@ -207,10 +217,12 @@
 
 ;;; Literals
 
-[
-	(comment)
-	(shebang_line)
-] @comment
+(comment) @comment @spell
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^/[*][*][^*].*[*]/$"))
+
+(shebang_line) @preproc
 
 (real_literal) @float
 [
@@ -270,6 +282,9 @@
 ;;; Keywords
 
 (type_alias "typealias" @keyword)
+
+(companion_object "companion" @keyword)
+
 [
 	(class_modifier)
 	(member_modifier)
@@ -281,7 +296,7 @@
 	(visibility_modifier)
 	(reification_modifier)
 	(inheritance_modifier)
-]@keyword
+] @type.qualifier
 
 [
 	"val"
@@ -293,7 +308,13 @@
 ;	"typeof" ; NOTE: It is reserved for future use
 ] @keyword
 
-("fun") @keyword.function
+[
+  "suspend"
+] @keyword.coroutine
+
+[
+  "fun"
+] @keyword.function
 
 (jump_expression) @keyword.return
 
@@ -394,7 +415,7 @@
 ; NOTE: `interpolated_identifier`s can be highlighted in any way
 (line_string_literal
 	"$" @punctuation.special
-	(interpolated_identifier) @none)
+	(interpolated_identifier) @none @variable)
 (line_string_literal
 	"${" @punctuation.special
 	(interpolated_expression) @none
@@ -402,7 +423,7 @@
 
 (multi_line_string_literal
     "$" @punctuation.special
-    (interpolated_identifier) @none)
+    (interpolated_identifier) @none @variable)
 (multi_line_string_literal
 	"${" @punctuation.special
 	(interpolated_expression) @none

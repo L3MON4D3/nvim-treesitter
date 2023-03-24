@@ -1,6 +1,7 @@
 local parsers = require "nvim-treesitter.parsers"
 local queries = require "nvim-treesitter.query"
 local tsutils = require "nvim-treesitter.ts_utils"
+local ts = vim.treesitter
 
 local M = {}
 
@@ -14,16 +15,27 @@ M.comment_parsers = {
   phpdoc = true,
 }
 
+---@param root TSNode
+---@param lnum integer
+---@return TSNode
 local function get_first_node_at_line(root, lnum)
   local col = vim.fn.indent(lnum)
   return root:descendant_for_range(lnum - 1, col, lnum - 1, col)
 end
 
+---@param root TSNode
+---@param lnum integer
+---@return TSNode
 local function get_last_node_at_line(root, lnum)
   local col = #vim.fn.getline(lnum) - 1
   return root:descendant_for_range(lnum - 1, col, lnum - 1, col)
 end
 
+---@param bufnr integer
+---@param node TSNode
+---@param delimiter string
+---@return TSNode|nil child
+---@return boolean|nil is_end
 local function find_delimiter(bufnr, node, delimiter)
   for child, _ in node:iter_children() do
     if child:type() == delimiter then
@@ -76,13 +88,13 @@ function M.get_indent(lnum)
   end
 
   -- Get language tree with smallest range around node that's not a comment parser
-  local root, lang_tree
+  local root, lang_tree ---@type TSNode, LanguageTree
   parser:for_each_tree(function(tstree, tree)
     if not tstree or M.comment_parsers[tree:lang()] then
       return
     end
     local local_root = tstree:root()
-    if tsutils.is_in_node_range(local_root, lnum - 1, 0) then
+    if ts.is_in_node_range(local_root, lnum - 1, 0) then
       if not root or tsutils.node_length(root) >= tsutils.node_length(local_root) then
         root = local_root
         lang_tree = tree
@@ -97,7 +109,7 @@ function M.get_indent(lnum)
 
   local q = get_indents(vim.api.nvim_get_current_buf(), root, lang_tree:lang())
   local is_empty_line = string.match(vim.fn.getline(lnum), "^%s*$") ~= nil
-  local node
+  local node ---@type TSNode
   if is_empty_line then
     local prevlnum = vim.fn.prevnonblank(lnum)
     node = get_last_node_at_line(root, prevlnum)
@@ -125,7 +137,13 @@ function M.get_indent(lnum)
 
   while node do
     -- do 'autoindent' if not marked as @indent
-    if not q.indent[node:id()] and q.auto[node:id()] and node:start() < lnum - 1 and lnum - 1 <= node:end_() then
+    if
+      not q.indent[node:id()]
+      and not q.aligned_indent[node:id()]
+      and q.auto[node:id()]
+      and node:start() < lnum - 1
+      and lnum - 1 <= node:end_()
+    then
       return -1
     end
 
@@ -159,7 +177,7 @@ function M.get_indent(lnum)
       should_process
       and (
         q.indent[node:id()]
-        and (srow ~= erow or is_in_err)
+        and (srow ~= erow or is_in_err or q.indent[node:id()].immediate_indent)
         and (srow ~= lnum - 1 or q.indent[node:id()].start_at_same_line)
       )
     then
@@ -170,12 +188,17 @@ function M.get_indent(lnum)
     -- do not indent for nodes that starts-and-ends on same line and starts on target line (lnum)
     if q.aligned_indent[node:id()] and srow ~= erow and (srow ~= lnum - 1) then
       local metadata = q.aligned_indent[node:id()]
-      local o_delim_node, is_last_in_line
+      local o_delim_node, is_last_in_line ---@type TSNode|nil, boolean|nil
+      local c_delim_node ---@type TSNode|nil
       if metadata.delimiter then
+        ---@type string
         local opening_delimiter = metadata.delimiter and metadata.delimiter:sub(1, 1)
         o_delim_node, is_last_in_line = find_delimiter(bufnr, node, opening_delimiter)
+        local closing_delimiter = metadata.delimiter and metadata.delimiter:sub(2, 2)
+        c_delim_node, _ = find_delimiter(bufnr, node, closing_delimiter)
       else
         o_delim_node = node
+        c_delim_node = node
       end
 
       if o_delim_node then
@@ -183,8 +206,29 @@ function M.get_indent(lnum)
           -- hanging indent (previous line ended with starting delimiter)
           indent = indent + indent_size * 1
         else
-          local _, o_scol = o_delim_node:start()
-          return math.max(indent, 0) + o_scol + (metadata.increment or 1)
+          local o_srow, o_scol = o_delim_node:start()
+          local final_line_indent = false
+          if c_delim_node then
+            local c_srow, _ = c_delim_node:start()
+            if c_srow ~= o_srow and c_srow == lnum - 1 then
+              -- delims end on current line, and are not open and closed same line.
+              -- final_line_indent controls this behavior, for example this is not desirable
+              -- for a tuple.
+              final_line_indent = metadata.final_line_indent or false
+            end
+          end
+          if final_line_indent then
+            -- last line must be indented more in cases where
+            -- it would be same indent as next line
+            local aligned_indent = o_scol + (metadata.increment or 1)
+            if aligned_indent <= indent then
+              return indent + indent_size * 1
+            else
+              return aligned_indent
+            end
+          else
+            return o_scol + (metadata.increment or 1)
+          end
         end
       end
     end
@@ -197,8 +241,10 @@ function M.get_indent(lnum)
   return indent
 end
 
+---@type table<integer, string>
 local indent_funcs = {}
 
+---@param bufnr integer
 function M.attach(bufnr)
   indent_funcs[bufnr] = vim.bo.indentexpr
   vim.bo.indentexpr = "nvim_treesitter#indent()"

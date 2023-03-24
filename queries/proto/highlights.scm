@@ -1,18 +1,22 @@
 [
   "syntax"
-  "package"
   "option"
-  "import"
   "service"
   "rpc"
   "returns"
   "message"
   "enum"
   "oneof"
+  "optional"
   "repeated"
   "reserved"
   "to"
 ] @keyword
+
+[
+  "package"
+  "import"
+] @include
 
 [
   (key_type)
@@ -41,7 +45,10 @@
   (false)
 ] @boolean
 
-(comment) @comment
+(comment) @comment @spell
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^/[*][*][^*].*[*]/$"))
 
 [
   "("
@@ -52,7 +59,7 @@
   "}"
   "<"
   ">"
-]  @punctuation.bracket
+] @punctuation.bracket
 
 [
  ";"

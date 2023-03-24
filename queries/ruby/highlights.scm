@@ -1,24 +1,20 @@
 ; Variables
+
 (identifier) @variable
+(global_variable) @variable.global
 
 ; Keywords
 
 [
  "alias"
  "begin"
- "break"
  "class"
- "def"
  "do"
  "end"
  "ensure"
  "module"
- "next"
- "redo"
  "rescue"
- "retry"
  "then"
- "undef"
  ] @keyword
 
 [
@@ -34,6 +30,14 @@
 ] @keyword.operator
 
 [
+  "def"
+  "undef"
+] @keyword.function
+
+(method
+  "end" @keyword.function)
+
+[
  "case"
  "else"
  "elsif"
@@ -42,16 +46,29 @@
  "when"
  ] @conditional
 
+(if
+  "end" @conditional)
+(if
+  (then) @conditional)
+(unless
+  (then) @conditional)
+(elsif
+  (then) @conditional)
+
 [
  "for"
  "until"
  "while"
+ "break"
+ "redo"
+ "retry"
+ "next"
  ] @repeat
 
 (constant) @type
 
-((identifier) @keyword
- (#vim-match? @keyword "^(private|protected|public)$"))
+((identifier) @type.qualifier
+ (#any-of? @type.qualifier "private" "protected" "public"))
 
 [
  "rescue"
@@ -59,7 +76,7 @@
  ] @exception
 
 ((identifier) @exception
- (#vim-match? @exception "^(fail|raise)$"))
+ (#any-of? @exception "fail" "raise"))
 
 ; Function calls
 
@@ -76,7 +93,7 @@
 (program
  (call
   (identifier) @include)
- (#vim-match? @include "^(require|require_relative|load)$"))
+ (#any-of? @include "require" "require_relative" "load"))
 
 ; Function definitions
 
@@ -156,13 +173,30 @@
 (float) @float
 
 [
- (nil)
  (true)
  (false)
  ] @boolean
 
-(comment) @comment
-(comment) @spell
+(nil) @constant.builtin
+
+(comment) @comment @spell
+
+(program
+  (comment)+ @comment.documentation
+  (class))
+
+(module
+  (comment)+ @comment.documentation
+  (body_statement (class)))
+
+(class
+  (comment)+ @comment.documentation
+  (body_statement (method)))
+
+(body_statement
+  (comment)+ @comment.documentation
+  (method))
+
 (string_content) @spell
 
 ; Operators

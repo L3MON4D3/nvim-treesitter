@@ -7,14 +7,21 @@
  "||"
  "|"
  "&"
- "="
- "!="
  ".."
  "!"
  (direction)
  (stream_redirect)
- (test_option)
 ] @operator
+
+;; match operators of test command
+(command
+  name: (word) @function.builtin (#match? @function.builtin "^test$")
+  argument: (word) @operator (#match? @operator "^(!?\\=|-[a-zA-Z]+)$"))
+
+;; match operators of [ command
+(command
+  name: (word) @punctuation.bracket (#match? @punctuation.bracket "^\\[$")
+  argument: (word) @operator (#match? @operator "^(!?\\=|-[a-zA-Z]+)$"))
 
 [
  "not"
@@ -103,10 +110,10 @@
             ]
 )
 
-(command_substitution_dollar "$" @punctuation.bracket)
+(command_substitution "$" @punctuation.bracket)
 
-; non-bultin command names
-(command name: (word) @function)
+; non-builtin command names
+(command name: (word) @function.call)
 
 ; derived from builtin -n (fish 3.2.2)
 (command
@@ -115,8 +122,6 @@
         (#any-of? @function.builtin "." ":" "_" "alias" "argparse" "bg" "bind" "block" "breakpoint" "builtin" "cd" "command" "commandline" "complete" "contains" "count" "disown" "echo" "emit" "eval" "exec" "exit" "fg" "functions" "history" "isatty" "jobs" "math" "printf" "pwd" "random" "read" "realpath" "set" "set_color" "source" "status" "string" "test" "time" "type" "ulimit" "wait")
         ]
 )
-
-(test_command "test" @function.builtin)
 
 ;; Functions
 
@@ -149,10 +154,13 @@
 
 [(integer) (float)] @number
 (comment) @comment
-(test_option) @string
+(comment) @spell
 
 ((word) @boolean
 (#any-of? @boolean "true" "false"))
+
+((program . (comment) @preproc)
+  (#match? @preproc "^#!/"))
 
 ;; Error
 

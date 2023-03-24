@@ -1,5 +1,6 @@
 [ "." ";" ":" "," ] @punctuation.delimiter
-[ "\\(" "(" ")" "[" "]" "{" "}"] @punctuation.bracket ; TODO: "\\(" ")" in interpolations should be @punctuation.special
+; TODO: "\\(" ")" in interpolations should be @punctuation.special
+[ "\\(" "(" ")" "[" "]" "{" "}"] @punctuation.bracket
 
 ; Identifiers
 (attribute) @variable
@@ -8,6 +9,7 @@
 
 ; Declarations
 "func" @keyword.function
+
 [
   (visibility_modifier)
   (member_modifier)
@@ -15,12 +17,11 @@
   (property_modifier)
   (parameter_modifier)
   (inheritance_modifier)
-] @keyword
+] @type.qualifier
 
 (function_declaration (simple_identifier) @method)
 (function_declaration ["init" @constructor])
 (throws) @keyword
-"async" @keyword
 (where_keyword) @keyword
 (parameter external_name: (simple_identifier) @parameter)
 (parameter name: (simple_identifier) @parameter)
@@ -34,16 +35,21 @@
   "struct"
   "class"
   "actor"
-  "nonisolated"
   "enum"
   "protocol"
   "extension"
   "indirect"
-  "some"
+  "nonisolated"
   "override"
   "convenience"
   "required"
+  "some"
 ] @keyword
+
+[
+  "async"
+  "await"
+] @keyword.coroutine
 
 [
   (getter_specifier)
@@ -96,8 +102,19 @@
 (statement_label) @label
 
 ; Comments
-(comment) @comment
-(multiline_comment) @comment
+[
+ (comment)
+ (multiline_comment)
+] @comment @spell
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^///[^/]"))
+
+((comment) @comment.documentation
+  (#lua-match? @comment.documentation "^///$"))
+
+((multiline_comment) @comment.documentation
+  (#lua-match? @comment.documentation "^/[*][*][^*].*[*]/$"))
 
 ; String literals
 (line_str_text) @string
@@ -120,7 +137,10 @@
 ] @number
 (real_literal) @float
 (boolean_literal) @boolean
-"nil" @variable.builtin
+"nil" @constant.builtin
+
+; Regex literals
+(regex_literal) @string.regex
 
 ; Operators
 (custom_operator) @operator

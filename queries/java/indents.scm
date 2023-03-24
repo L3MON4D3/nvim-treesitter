@@ -2,7 +2,6 @@
   (class_body)
   (enum_body)
   (interface_body)
-  (constructor_declaration)
   (constructor_body)
   (block)
   (switch_block)
@@ -22,9 +21,7 @@
   "]"
 ] @branch
 
-[
-  "}"
-] @indent_end
+"}" @indent_end
 
 (line_comment) @ignore
 
