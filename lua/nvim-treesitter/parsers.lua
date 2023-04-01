@@ -415,6 +415,14 @@ list.fennel = {
   maintainers = { "@TravonteD" },
 }
 
+list.firrtl = {
+  install_info = {
+    url = "https://github.com/amaanq/tree-sitter-firrtl",
+    files = { "src/parser.c", "src/scanner.cc" },
+  },
+  maintainers = { "@amaanq" },
+}
+
 list.fish = {
   install_info = {
     url = "https://github.com/ram02z/tree-sitter-fish",
@@ -631,14 +639,6 @@ list.heex = {
     files = { "src/parser.c" },
   },
   maintainers = { "@connorlay" },
-}
-
-list.help = {
-  install_info = {
-    url = "https://github.com/neovim/tree-sitter-vimdoc",
-    files = { "src/parser.c" },
-  },
-  maintainers = { "@vigoux" },
 }
 
 list.hjson = {
@@ -1068,6 +1068,14 @@ list.poe_filter = {
   maintainers = { "@ObserverOfTime" },
   readme_name = "Path of Exile item filter",
   experimental = true,
+}
+
+list.pony = {
+  install_info = {
+    url = "https://github.com/amaanq/tree-sitter-pony",
+    files = { "src/parser.c", "src/scanner.c" },
+  },
+  maintainers = { "@amaanq", "@mfelsche" },
 }
 
 list.prisma = {
@@ -1532,6 +1540,15 @@ list.vim = {
     files = { "src/parser.c", "src/scanner.c" },
   },
   maintainers = { "@vigoux" },
+}
+
+list.vimdoc = {
+  install_info = {
+    url = "https://github.com/neovim/tree-sitter-vimdoc",
+    files = { "src/parser.c" },
+  },
+  filetype = "help",
+  maintainers = { "@clason" },
 }
 
 list.vue = {

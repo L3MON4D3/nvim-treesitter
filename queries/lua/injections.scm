@@ -14,7 +14,7 @@
 ((function_call
   name: (_) @_vimcmd_identifier
   arguments: (arguments (string content: _ @query) .))
-  (#any-of? @_vimcmd_identifier "vim.treesitter.query.set_query" "vim.treesitter.query.parse_query"))
+  (#any-of? @_vimcmd_identifier "vim.treesitter.query.set" "vim.treesitter.query.parse_query" "vim.treesitter.query.parse"))
 
 ((function_call
   name: (_) @language
