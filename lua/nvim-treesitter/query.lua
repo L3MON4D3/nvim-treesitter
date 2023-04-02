@@ -283,14 +283,14 @@ function M.iter_prepared_matches(query, qnode, bufnr, start_row, end_row)
             )
           end
           if pred[1] == "make-range-row-offset!" and type(pred[2]) == "string" and #pred == 6 then
-            insert_to_path(
+            M.insert_to_path(
               prepared_match,
               split(pred[2] .. ".node"),
               tsrange.TSRange.from_nodes_offset(bufnr, match[pred[3]], pred[4], match[pred[5]], pred[6])
             )
           end
           if pred[1] == "make-range-extended!" and #pred == 10 then
-            insert_to_path(
+            M.insert_to_path(
               prepared_match,
               split(pred[2] .. ".node"),
               tsrange.TSRange.from_nodes_extended(bufnr,
