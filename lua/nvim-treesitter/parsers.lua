@@ -515,7 +515,7 @@ list.git_config = {
   },
   filetype = "gitconfig",
   maintainers = { "@amaanq" },
-  readme_name = "gitconfig",
+  readme_name = "git_config",
 }
 
 list.gitignore = {
@@ -1536,10 +1536,10 @@ list.vhs = {
 
 list.vim = {
   install_info = {
-    url = "https://github.com/vigoux/tree-sitter-viml",
+    url = "https://github.com/neovim/tree-sitter-vim",
     files = { "src/parser.c", "src/scanner.c" },
   },
-  maintainers = { "@vigoux" },
+  maintainers = { "@clason" },
 }
 
 list.vimdoc = {

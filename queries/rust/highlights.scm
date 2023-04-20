@@ -82,6 +82,9 @@
 ((scoped_identifier
     name: (identifier) @type)
  (#lua-match? @type "^[A-Z]"))
+((scoped_identifier
+    name: (identifier) @constant)
+ (#lua-match? @constant "^[A-Z][A-Z%d_]*$"))
 
 [
   (crate)
@@ -182,12 +185,9 @@
 
 [
   "default"
-  "dyn"
   "enum"
-  "extern"
   "impl"
   "let"
-  "match"
   "move"
   "pub"
   "struct"
@@ -204,18 +204,21 @@
 ] @keyword.coroutine
 
 [
- "ref"
+  "ref"
  (mutable_specifier)
 ] @type.qualifier
 
 [
- "const"
- "static"
+  "const"
+  "static"
+  "dyn"
+  "extern"
 ] @storageclass
 
 (lifetime ["'" (identifier)] @storageclass.lifetime)
 
 "fn" @keyword.function
+
 [
   "return"
   "yield"
@@ -230,8 +233,9 @@
 (visibility_modifier [(crate) (super) (self)] @namespace)
 
 [
-  "else"
   "if"
+  "else"
+  "match"
 ] @conditional
 
 [
@@ -243,8 +247,7 @@
 ] @repeat
 
 "for" @keyword
-(for_expression
-  "for" @repeat)
+(for_expression "for" @repeat)
 
 ;;; Operators & Punctuation
 
@@ -262,7 +265,6 @@
   "+="
   "-"
   "-="
-  "->"
   ".."
   "..="
   "/"
@@ -273,7 +275,6 @@
   "<="
   "="
   "=="
-  "=>"
   ">"
   ">="
   ">>"
@@ -294,7 +295,7 @@
 (bracketed_type ["<" ">"] @punctuation.bracket)
 (for_lifetimes ["<" ">"] @punctuation.bracket)
 
-["," "." ":" "::" ";"] @punctuation.delimiter
+["," "." ":" "::" ";" "->" "=>"] @punctuation.delimiter
 
 (attribute_item "#" @punctuation.special)
 (inner_attribute_item ["!" "#"] @punctuation.special)
