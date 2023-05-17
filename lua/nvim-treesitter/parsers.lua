@@ -167,7 +167,7 @@ list.c = {
     url = "https://github.com/tree-sitter/tree-sitter-c",
     files = { "src/parser.c" },
   },
-  maintainers = { "@vigoux" },
+  maintainers = { "@amaanq" },
 }
 
 list.c_sharp = {
@@ -691,7 +691,7 @@ list.http = {
     files = { "src/parser.c" },
     generate_requires_npm = true,
   },
-  maintainers = { "@NTBBloodbath" },
+  maintainers = { "@amaanq" },
 }
 
 list.ini = {
@@ -701,6 +701,15 @@ list.ini = {
   },
   maintainers = { "@theHamsta" },
   experimental = true,
+}
+
+list.janet_simple = {
+  install_info = {
+    url = "https://github.com/sogaiu/tree-sitter-janet-simple",
+    files = { "src/parser.c", "src/scanner.c" },
+  },
+  filetype = "janet",
+  maintainers = { "@sogaiu" },
 }
 
 list.java = {
@@ -851,6 +860,14 @@ list.luap = {
   readme_name = "lua patterns",
 }
 
+list.luau = {
+  install_info = {
+    url = "https://github.com/amaanq/tree-sitter-luau",
+    files = { "src/parser.c", "src/scanner.c" },
+  },
+  maintainers = { "@amaanq" },
+}
+
 list.m68k = {
   install_info = {
     url = "https://github.com/grahambates/tree-sitter-m68k",
@@ -993,6 +1010,14 @@ list.ocamllex = {
   maintainers = { "@undu" },
 }
 
+list.odin = {
+  install_info = {
+    url = "https://github.com/amaanq/tree-sitter-odin",
+    files = { "src/parser.c", "src/scanner.c" },
+  },
+  maintainers = { "@amaanq" },
+}
+
 list.org = {
   install_info = {
     url = "https://github.com/milisims/tree-sitter-org",
@@ -1109,6 +1134,14 @@ list.pug = {
   },
   maintainers = { "@zealot128" },
   experimental = true,
+}
+
+list.puppet = {
+  install_info = {
+    url = "https://github.com/amaanq/tree-sitter-puppet",
+    files = { "src/parser.c" },
+  },
+  maintainers = { "@amaanq" },
 }
 
 list.python = {
@@ -1230,7 +1263,7 @@ list.rust = {
     url = "https://github.com/tree-sitter/tree-sitter-rust",
     files = { "src/parser.c", "src/scanner.c" },
   },
-  maintainers = { "@vigoux" },
+  maintainers = { "@amaanq" },
 }
 
 list.scala = {
@@ -1269,7 +1302,7 @@ list.slint = {
 list.smali = {
   install_info = {
     url = "https://git.sr.ht/~yotam/tree-sitter-smali",
-    files = { "src/parser.c" },
+    files = { "src/parser.c", "src/scanner.c" },
   },
   maintainers = { "@amaanq" },
 }
@@ -1487,6 +1520,14 @@ list.ungrammar = {
     files = { "src/parser.c" },
   },
   maintainers = { "@Philipp-M", "@amaanq" },
+}
+
+list.usd = {
+  install_info = {
+    url = "https://github.com/ColinKennedy/tree-sitter-usd",
+    files = { "src/parser.c" },
+  },
+  maintainers = { "@ColinKennedy" },
 }
 
 list.uxntal = {

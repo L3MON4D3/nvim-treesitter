@@ -66,3 +66,9 @@
       (attribute_value) @regex
     ] (#eq? @_attr "pattern")))
 ))
+
+; <input type="checkbox" onchange="this.closest('form').elements.output.value = this.checked">
+(attribute
+  (attribute_name) @_name
+  (#lua-match? @_name "^on[a-z]+$")
+  (quoted_attribute_value (attribute_value) @javascript))
