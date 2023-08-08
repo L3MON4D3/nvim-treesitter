@@ -29,7 +29,7 @@ jobs:
 
       - name: Update parsers
         env:
-          SKIP_LOCKFILE_UPDATE_FOR_LANGS: verilog,gleam,nix
+          SKIP_LOCKFILE_UPDATE_FOR_LANGS: ""
         run: |
           cp lockfile.json /tmp/old_lockfile.json
           ./nvim.appimage --headless -c "luafile ./scripts/write-lockfile.lua" -c "q"
@@ -48,7 +48,7 @@ jobs:
           git clean -xf
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           title: "Update lockfile.json: ${{ env.UPDATED_PARSERS }}"
           branch: update-lockfile-pr

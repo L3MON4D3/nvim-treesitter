@@ -160,7 +160,7 @@
 ; Constants
 
 (this) @variable.builtin
-(nullptr) @constant.builtin
+(null "nullptr" @constant.builtin)
 
 (true) @boolean
 (false) @boolean
@@ -232,6 +232,9 @@
 "::" @punctuation.delimiter
 
 (template_argument_list
+  ["<" ">"] @punctuation.bracket)
+
+(template_parameter_list
   ["<" ">"] @punctuation.bracket)
 
 (literal_suffix) @operator

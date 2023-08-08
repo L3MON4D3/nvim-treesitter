@@ -1,21 +1,32 @@
 ; inherits: ecma
 
+"require" @include
+
+(import_require_clause source: (string) @text.uri)
+
 [
   "declare"
   "enum"
   "export"
   "implements"
   "interface"
-  "keyof"
   "type"
   "namespace"
   "override"
-  "satisfies"
   "module"
+  "asserts"
   "infer"
+  "is"
 ] @keyword
 
-(as_expression "as" @keyword)
+[
+  "keyof"
+  "satisfies"
+] @keyword.operator
+
+(as_expression "as" @keyword.operator)
+(export_statement "as" @keyword.operator)
+(mapped_type_clause "as" @keyword.operator)
 
 [
   "abstract"
@@ -48,6 +59,9 @@
 (type_parameters
   ["<" ">"] @punctuation.bracket)
 
+(object_type
+  ["{|" "|}"] @punctuation.bracket)
+
 (union_type
   "|" @punctuation.delimiter)
 
@@ -57,17 +71,28 @@
 (type_annotation
   ":" @punctuation.delimiter)
 
+(type_predicate_annotation
+  ":" @punctuation.delimiter)
+
 (index_signature
   ":" @punctuation.delimiter)
+
+(omitting_type_annotation
+  "-?:" @punctuation.delimiter)
 
 (opting_type_annotation
   "?:" @punctuation.delimiter)
 
 "?." @punctuation.delimiter
 
+(abstract_method_signature "?" @punctuation.special)
 (method_signature "?" @punctuation.special)
+(method_definition "?" @punctuation.special)
 (property_signature "?" @punctuation.special)
 (optional_parameter "?" @punctuation.special)
+(optional_type "?" @punctuation.special)
+(public_field_definition [ "?" "!" ] @punctuation.special)
+(flow_maybe_type "?" @punctuation.special)
 
 (template_type ["${" "}"] @punctuation.special)
 
@@ -90,6 +115,12 @@
   (object_pattern
     (shorthand_property_identifier_pattern) @parameter))
 
+;; ({ a = b }) => null
+(required_parameter
+  (object_pattern
+    (object_assignment_pattern
+      (shorthand_property_identifier_pattern) @parameter)))
+
 ;; ({ a: b }) => null
 (required_parameter
   (object_pattern
@@ -104,6 +135,9 @@
 ;; a => null
 (arrow_function
   parameter: (identifier) @parameter)
+
+;; global declaration
+(ambient_declaration "global" @namespace)
 
 ;; function signatures
 (ambient_declaration

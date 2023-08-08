@@ -158,6 +158,11 @@
 (namespace_import
   (identifier) @namespace)
 
+; Decorators
+;----------
+(decorator "@" @attribute (identifier) @attribute)
+(decorator "@" @attribute (call_expression (identifier) @attribute))
+
 ; Literals
 ;---------
 
@@ -165,6 +170,9 @@
   (this)
   (super)
 ] @variable.builtin
+
+((identifier) @variable.builtin
+ (#eq? @variable.builtin "self"))
 
 [
   (true)
@@ -186,10 +194,11 @@
 ((string_fragment) @preproc
  (#eq? @preproc "use strict"))
 
-(string) @string @spell
+(string) @string
 (template_string) @string
 (escape_sequence) @string.escape
 (regex_pattern) @string.regex
+(regex_flags) @character.special
 (regex "/" @punctuation.bracket) ; Regex delimiters
 
 (number) @number
@@ -199,14 +208,14 @@
 ; Punctuation
 ;------------
 
-"..." @punctuation.special
-
 ";" @punctuation.delimiter
 "." @punctuation.delimiter
 "," @punctuation.delimiter
 
 (pair ":" @punctuation.delimiter)
 (pair_pattern ":" @punctuation.delimiter)
+(switch_case ":" @punctuation.delimiter)
+(switch_default ":" @punctuation.delimiter)
 
 [
   "--"
@@ -250,12 +259,13 @@
   "&&="
   "||="
   "??="
+  "..."
 ] @operator
 
 (binary_expression "/" @operator)
 (ternary_expression ["?" ":"] @conditional.ternary)
 (unary_expression ["!" "~" "-" "+"] @operator)
-(unary_expression ["delete" "void" "typeof"] @keyword.operator)
+(unary_expression ["delete" "void"] @keyword.operator)
 
 [
   "("
@@ -304,13 +314,10 @@
   "export"
   "extends"
   "get"
-  "in"
-  "instanceof"
   "let"
   "set"
   "static"
   "target"
-  "typeof"
   "var"
   "with"
 ] @keyword
@@ -332,6 +339,9 @@
 [
   "new"
   "delete"
+  "in"
+  "instanceof"
+  "typeof"
 ] @keyword.operator
 
 [
