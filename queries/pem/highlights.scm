@@ -6,6 +6,4 @@
 
 (data) @none
 
-(comment) @comment
-
-(ERROR) @error
+(comment) @comment @spell

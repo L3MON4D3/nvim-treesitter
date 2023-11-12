@@ -140,9 +140,10 @@
   (#eq? @keyword.coroutine "coroutine"))
 
 (variable_list
-   attribute: (attribute
-     (["<" ">"] @punctuation.bracket
-      (identifier) @attribute)))
+  (attribute
+    "<" @punctuation.bracket
+    (identifier) @attribute
+    ">" @punctuation.bracket))
 
 ;; Labels
 
@@ -179,6 +180,8 @@
 ;; Functions
 
 (parameters (identifier) @parameter)
+
+(vararg_expression) @parameter.builtin
 
 (function_declaration
   name: [
@@ -243,5 +246,4 @@
 
 (string) @string
 
-;; Error
-(ERROR) @error
+(escape_sequence) @string.escape

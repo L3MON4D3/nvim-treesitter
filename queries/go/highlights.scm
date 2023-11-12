@@ -171,6 +171,8 @@
            "imag"
            "len"
            "make"
+           "max"
+           "min"
            "new"
            "panic"
            "print"
@@ -242,10 +244,6 @@
 (source_file
   (comment)+ @comment.documentation
   . (var_declaration))
-
-; Errors
-
-(ERROR) @error
 
 ; Spell
 
